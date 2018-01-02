@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Kubernetes Helm chart for setting up a community VoltDB cluster
+name: kubevoltdb
+version: 0.1.0

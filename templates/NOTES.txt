@@ -1,0 +1,4 @@
+1. Forward the VoltDB Web Interface Port to localhost by running this command:
+kubectl port-forward {{ template "kubevoltdb.name" . }}-0 :8080
+
+2. Point your browser to the localhost/port output from the command above.

@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kubevoltdb.name" . }} 
+  labels:
+    app: {{ template "kubevoltdb.app" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+spec:
+  ports:
+  - port: 21212
+    name: cli
+  - port: 21211
+    name: adm
+  - port: 8080
+    name: web
+  - port: 3021
+    name: int
+  - port: 5555
+    name: rep
+  - port: 7181
+    name: zoo
+  - port: 22
+    name: ssh
+  clusterIP: None
+  selector:
+    app: {{ template "kubevoltdb.app" . }}
+    release: {{ .Release.Name }}

@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: {{ template "kubevoltdb.name" . }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kubevoltdb.app" . }} # has to match .spec.template.metadata.labels
+      release: {{ .Release.Name }}
+  serviceName: {{ template "kubevoltdb.name" . }}
+  replicas: {{ .Values.replicaCount }} # by default is 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "kubevoltdb.app" . }} # has to match .spec.selector.matchLabels
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 21212
+          name: cli
+        - containerPort: 21211
+          name: adm
+        - containerPort: 8080
+          name: web
+        - containerPort: 3021
+          name: int
+        - containerPort: 5555
+          name: rep
+        - containerPort: 7181
+          name: zoo
+        - containerPort: 22
+          name: ssh
+        env:
+          - name: HOST_COUNT
+            value: "{{ .Values.replicaCount }}"
+          - name: HOSTS
+            value: "{{ template "kubevoltdb.name" . }}-0.{{ template "kubevoltdb.name" . }}"
